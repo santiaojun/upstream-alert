@@ -1,0 +1,21 @@
+# Secrets: API keys go in .env, never in Git
+.env
+*.key
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ArcGIS scratch and large intermediate files (export GeoJSON into data/ instead)
+*.gdb/
+*.lock
+*.aprx.bak
+scratch/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
