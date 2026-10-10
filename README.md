@@ -101,8 +101,20 @@ alarms, not missed collapses.
 
 ### Alert evaluation
 
-TODO (Yunhong): number of runs, share of alerts whose numbers match the scenario, and share that
-pass the validator on the first try.
+`python ai/evaluate_alerts.py 5` asks the LLM (Claude Sonnet 5.5, `claude-sonnet-5-5`, via the Claude
+Code CLI) for 5 first drafts per village, 40 in total, and checks each one before any regeneration.
+Results are in `ai/eval_results.json`.
+
+| Check | First drafts that pass |
+|---|---|
+| Both lead times correct and no other numbers, in English and Nepali | 40/40 |
+| Village named in English and Nepali | 40/40 |
+| All validator checks on the first try | 40/40 |
+
+Zero failures in 40 drafts still allows a failure rate of up to about 7.5% (95% confidence), so the
+validator stays in the loop. It checks numbers and names, not wording: an earlier prompt produced
+Nepali instructions phrased as statements and one garbled sentence, all of which passed. The prompt
+now asks for the polite command form.
 
 ## Limitations
 

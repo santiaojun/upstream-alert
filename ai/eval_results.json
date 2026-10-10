@@ -1,0 +1,376 @@
+{
+  "generated_at": "2026-10-10T06:19:09+00:00",
+  "model": "claude-sonnet-5-5",
+  "generator": "claude -p (2.1.296 (Claude Code))",
+  "summary": {
+    "rounds": 5,
+    "villages": 8,
+    "drafts": 40,
+    "call_failures": 0,
+    "numbers_correct": 40,
+    "names_correct": 40,
+    "first_try_passed": 40
+  },
+  "drafts": [
+    {
+      "round": 1,
+      "village_id": "rasuwa-gadhi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Rasuwa Gadhi: Flood may arrive in 22 to 37 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, रसुवागढी: बाढी 22 देखि 37 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 1,
+      "village_id": "timure",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood warning for Timure. Water may arrive in 26 to 43 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "टिमुरेमा बाढी आउन सक्छ। 26 देखि 43 मिनेटमा पानी आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 1,
+      "village_id": "syabru-bensi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Syabru Bensi: flood may arrive in 38 to 64 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, स्याप्रु बेसी: बाढी 38 देखि 64 मिनेटभित्र आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 1,
+      "village_id": "haku-besi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert for Haku Besi: flood may arrive in 47 to 79 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "हाकु बेसी बाढी चेतावनी: बाढी ४७ देखि ७९ मिनेटमा आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 1,
+      "village_id": "mailung",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD ALERT, Mailung: Flood may reach you in 57 to 96 minutes. Move now to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढी चेतावनी, मैलुङ: बाढी 57 देखि 96 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 1,
+      "village_id": "shanti-bazar",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Shanti Bazar: Flood may arrive in 66 to 110 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, शान्ति बजार: बाढी ६६ देखि ११० मिनेटमा आउन सक्छ। अहिले नै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 1,
+      "village_id": "betrawati",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Betrawati: Flood may arrive in 71 to 119 minutes. Move to high ground away from the river now. Do not wait to see the water. Help children and elders.",
+      "text_ne": "बाढी चेतावनी, बेत्रावती: बाढी 71 देखि 119 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्। बालबालिका र वृद्धवृद्धालाई सहयोग गर्नुहोस्।"
+    },
+    {
+      "round": 1,
+      "village_id": "bidur",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood warning for Bidur. Flood may reach you in 84 to 140 minutes. Move now to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बिदुरमा बाढीको चेतावनी। बाढी 84 देखि 140 मिनेटमा पुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "rasuwa-gadhi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Rasuwa Gadhi! Flood may arrive in 22 to 37 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, रसुवागढी! बाढी २२ देखि ३७ मिनेटमा आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देखिन नपर्खनुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "timure",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING for Timure. Flood may reach you in 26 to 43 minutes. Move now to high ground, away from the river. Do not wait to see the water.",
+      "text_ne": "टिमुरेमा बाढीको चेतावनी। बाढी 26 देखि 43 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "syabru-bensi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Syabru Bensi: flood may reach you in 38 to 64 minutes. Move to high ground away from the river now. Do not wait to see the water. Go now.",
+      "text_ne": "बाढीको चेतावनी, स्याप्रु बेसी: बाढी 38 देखि 64 मिनेटभित्र आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्। तुरुन्त जानुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "haku-besi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert for Haku Besi. Flood may reach you in 47 to 79 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "हाकु बेसी बाढी चेतावनी। बाढी ४७ देखि ७९ मिनेटमा पुग्न सक्छ। अहिले नै हिँड्नुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "mailung",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING for Mailung: flood may reach you in 57 to 96 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "मैलुङमा बाढीको चेतावनी: बाढी 57 देखि 96 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "shanti-bazar",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Shanti Bazar: Flood may arrive in 66 to 110 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, शान्ति बजार: बाढी ६६ देखि ११० मिनेटमा आइपुग्न सक्छ। अहिले नै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "betrawati",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Betrawati: Flood may arrive in 71 to 119 minutes. Move to high ground away from the river now. Do not wait to see the water. Leave immediately.",
+      "text_ne": "बाढीको चेतावनी, बेत्रावती: बाढी 71 देखि 119 मिनेटमा आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्। तुरुन्त निस्कनुहोस्।"
+    },
+    {
+      "round": 2,
+      "village_id": "bidur",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert for Bidur: flood may reach you in 84 to 140 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बिदुरमा बाढी चेतावनी: बाढी 84 देखि 140 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देखिने जबसम्म नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "rasuwa-gadhi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Rasuwa Gadhi: Flood may arrive in 22 to 37 minutes. Move now to high ground, away from the river. Do not wait to see the water.",
+      "text_ne": "बाढी चेतावनी, रसुवागढी: बाढी 22 देखि 37 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "timure",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Timure: Flood may arrive in 26 to 43 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, टिमुरे: बाढी २६ देखि ४३ मिनेटमा आइपुग्न सक्छ। अहिले नै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "syabru-bensi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Syabru Bensi: Flood may arrive in 38 to 64 minutes. Leave now. Go to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, स्याप्रु बेसी: बाढी 38 देखि 64 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "haku-besi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Haku Besi: flood may reach you in 47 to 79 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, हाकु बेसी: बाढी 47 देखि 79 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "mailung",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING for Mailung. Flood may arrive in 57 to 96 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "मैलुङमा बाढीको चेतावनी। बाढी 57 देखि 96 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "shanti-bazar",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING for Shanti Bazar. Flood may arrive in 66 to 110 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "शान्ति बजारमा बाढीको चेतावनी। बाढी ६६ देखि ११० मिनेटमा आइपुग्न सक्छ। अहिले नै हिँड्नुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "betrawati",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD ALERT Betrawati: Flood may arrive in 71 to 119 minutes. Move to high ground away from the river now. Do not wait to see the water. Go now.",
+      "text_ne": "बाढी चेतावनी बेत्रावती: बाढी ७१ देखि ११९ मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आउँछ कि हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 3,
+      "village_id": "bidur",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert for Bidur! Flood may reach you in 84 to 140 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बिदुर बाढी चेतावनी! बाढी 84 देखि 140 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "rasuwa-gadhi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD ALERT, Rasuwa Gadhi: Flood may arrive in 22 to 37 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढी चेतावनी, रसुवागढी: बाढी 22 देखि 37 मिनेटमा आइपुग्न सक्छ। अहिले नै जानुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "timure",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood warning for Timure. Flood may reach you in 26 to 43 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बाढी चेतावनी: टिमुरे गाउँमा 26 देखि 43 मिनेटमा बाढी आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "syabru-bensi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING for Syabru Bensi. Flood may arrive in 38 to 64 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "स्याप्रु बेसीमा बाढीको चेतावनी। बाढी ३८ देखि ६४ मिनेटमा आइपुग्न सक्छ। अहिल्यै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देखिने पर्खाइ नगर्नुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "haku-besi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert for Haku Besi! Flood may reach you in 47 to 79 minutes. Leave now. Go to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "हाकु बेसीमा बाढीको चेतावनी! बाढी ४७ देखि ७९ मिनेटमा आइपुग्न सक्छ। अहिले नै घर छोड्नुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देखिने कुरा नपर्खनुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "mailung",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING, Mailung: Flood may reach you in 57 to 96 minutes. Move to high ground away from the river now. Do not wait to see the water. Go now!",
+      "text_ne": "मैलुङमा बाढीको चेतावनी: 57 देखि 96 मिनेटभित्र बाढी आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "shanti-bazar",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING for Shanti Bazar. Flood may arrive in 66 to 110 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "शान्ति बजारमा बाढीको चेतावनी। बाढी ६६ देखि ११० मिनेटमा आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "betrawati",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD ALERT, Betrawati: Flood may reach you in 71 to 119 minutes. Move to high ground away from the river now. Do not wait to see the water. Take children and elders with you.",
+      "text_ne": "बाढीको चेतावनी, बेत्रावती: बाढी ७१ देखि ११९ मिनेटमा पुग्न सक्छ। अहिले नै नदीदेखि टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्। बालबालिका र वृद्धवृद्धालाई साथ लिनुहोस्।"
+    },
+    {
+      "round": 4,
+      "village_id": "bidur",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert for Bidur! Flood may arrive in 84 to 140 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बिदुर बाढी चेतावनी! 84 देखि 140 मिनेटमा बाढी आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 5,
+      "village_id": "rasuwa-gadhi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD ALERT, Rasuwa Gadhi: Flood may arrive in 22 to 37 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढी चेतावनी, रसुवागढी: बाढी 22 देखि 37 मिनेटमा आइपुग्न सक्छ। अहिले नै हिँड्नुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 5,
+      "village_id": "timure",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING Timure: flood may reach you in 26 to 43 minutes. Move to high ground away from the river now. Do not wait to see the water. Go now!",
+      "text_ne": "बाढीको चेतावनी टिमुरे: 26 देखि 43 मिनेटभित्र बाढी आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्। तुरुन्त जानुहोस्!"
+    },
+    {
+      "round": 5,
+      "village_id": "syabru-bensi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD ALERT, Syabru Bensi: Flood may arrive in 38 to 64 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, स्याप्रु बेसी: बाढी ३८ देखि ६४ मिनेटभित्र आइपुग्न सक्छ। अहिले नै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 5,
+      "village_id": "haku-besi",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING: Haku Besi. Flood may arrive in 47 to 79 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी: हाकु बेसी। बाढी 47 देखि 79 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 5,
+      "village_id": "mailung",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING Mailung: Flood may arrive in 57 to 96 minutes. Go to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बाढी चेतावनी मैलुङ: बाढी 57 देखि 96 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 5,
+      "village_id": "shanti-bazar",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert, Shanti Bazar: flood water may arrive in 66 to 110 minutes. Move now to high ground, away from the river. Do not wait to see the water. Go now.",
+      "text_ne": "बाढीको चेतावनी, शान्ति बजार: बाढी 66 देखि 110 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    },
+    {
+      "round": 5,
+      "village_id": "betrawati",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "Flood alert for Betrawati: flood may reach you in 71 to 119 minutes. Move to high ground away from the river now. Do not wait to see the water. Go now.",
+      "text_ne": "बेत्रावतीमा बाढी चेतावनी: बाढी ७१ देखि ११९ मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्। तुरुन्त जानुहोस्।"
+    },
+    {
+      "round": 5,
+      "village_id": "bidur",
+      "passed": true,
+      "problems": [],
+      "model": "claude-sonnet-5-5",
+      "text_en": "FLOOD WARNING for Bidur: Flood may reach you in 84 to 140 minutes. Move now to high ground away from the river. Do not wait to see the water. Go now.",
+      "text_ne": "बिदुरमा बाढीको चेतावनी: बाढी 84 देखि 140 मिनेटमा पुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।"
+    }
+  ]
+}
