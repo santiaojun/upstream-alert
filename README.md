@@ -122,6 +122,8 @@ pass the validator on the first try.
 - **Reviewed catalogue.** The trigger is evaluated on the reviewed USGS catalogue. Real-time
   magnitudes and locations differ: the first version was 31 km further north and listed at
   magnitude 4.4 instead of 5.2.
+- **Unreviewed Nepali.** The Nepali alerts are machine-generated and have not been reviewed by a
+  native speaker. The validator checks their numbers and village names, not their wording.
 - **Floods that don't shake the ground.** The trigger needs a catalogued seismic event. The
   8 July 2025 flood in the same valley, which destroyed the Miteri Bridge at Rasuwagadhi, has no USGS
   event, so the rule would have missed it.
@@ -153,6 +155,14 @@ third-party packages):
 python pipeline/build_scenario.py
 python data/validate_scenario.py
 python pipeline/trigger.py
+```
+
+Generate, validate and evaluate the alerts (needs the Claude Code CLI, logged in; see `ai/README.md`):
+
+```
+python ai/generate_alerts.py
+python ai/validate_alerts.py
+python ai/evaluate_alerts.py 5
 ```
 
 ## Team
