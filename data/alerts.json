@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "scenario_event_id": "us7000tbwb",
-  "generated_at": "2026-10-10T06:42:35+00:00",
+  "generated_at": "2026-10-10T07:08:02+00:00",
   "model": "claude-sonnet-5-5",
   "generator": "claude -p (2.1.285 (Claude Code))",
   "alert_delay_min": 1,
@@ -15,7 +15,7 @@
         37
       ],
       "text_en": "FLOOD ALERT, Rasuwa Gadhi: Flood may arrive in 22 to 37 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
-      "text_ne": "बाढी चेतावनी, रसुवागढी: बाढी २२ देखि ३७ मिनेटमा आइपुग्न सक्छ। अहिले नै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देखेर पर्खनुहुन्न।",
+      "text_ne": "बाढी चेतावनी, रसुवागढी: बाढी २२ देखि ३७ मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।",
       "attempts": 1
     },
     {
@@ -25,8 +25,8 @@
         26,
         43
       ],
-      "text_en": "FLOOD WARNING Timure: Flood water may arrive in 26 to 43 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
-      "text_ne": "बाढीको चेतावनी टिमुरे: बाढी २६ देखि ४३ मिनेटमा आउन सक्छ। अहिले नै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नबस्नुहोस्।",
+      "text_en": "FLOOD WARNING, Timure! Flood may reach you in 26 to 43 minutes. Move to high ground away from the river now. Do not wait to see the water. Go now!",
+      "text_ne": "बाढीको चेतावनी, टिमुरे! बाढी २६ देखि ४३ मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्। अहिल्यै जानुहोस्!",
       "attempts": 1
     },
     {
@@ -36,8 +36,8 @@
         38,
         64
       ],
-      "text_en": "FLOOD ALERT, Syabru Bensi: Flood from upstream may arrive in 38 to 64 minutes. Move to high ground away from the river now. Do not wait to see the water.",
-      "text_ne": "बाढी चेतावनी, स्याप्रु बेसी: माथिल्लो भागबाट बाढी ३८ देखि ६४ मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देखेपछि कुर्नु पर्दैन।",
+      "text_en": "FLOOD WARNING, Syabru Bensi: Flood may arrive in 38 to 64 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, स्याप्रु बेसी: बाढी ३८ देखि ६४ मिनेटमा आइपुग्न सक्छ। अहिले नै हिँड्नुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।",
       "attempts": 1
     },
     {
@@ -47,8 +47,8 @@
         47,
         79
       ],
-      "text_en": "FLOOD WARNING, Haku Besi: Flood may arrive in 47 to 79 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
-      "text_ne": "बाढीको चेतावनी, हाकु बेसी: बाढी 47 देखि 79 मिनेटमा आउन सक्छ। अहिल्यै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नबस्नुहोस्।",
+      "text_en": "FLOOD WARNING for Haku Besi. Flood may arrive in 47 to 79 minutes. Move to high ground away from the river now. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी: हाकु बेसीमा 47 देखि 79 मिनेटमा बाढी आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।",
       "attempts": 1
     },
     {
@@ -58,8 +58,8 @@
         57,
         96
       ],
-      "text_en": "FLOOD WARNING for Mailung. Flood water may arrive in 57 to 96 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
-      "text_ne": "मैलुङ को लागि बाढीको चेतावनी। बाढीको पानी 57 देखि 96 मिनेटमा आइपुग्न सक्छ। अहिले नै हिँड्नुहोस्। खोलाबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।",
+      "text_en": "FLOOD ALERT, Mailung: Flood may reach you in 57 to 96 minutes. Move to high ground away from the river now. Do not wait to see the water. Take children and elders.",
+      "text_ne": "बाढी चेतावनी, मैलुङ: बाढी 57 देखि 96 मिनेटमा आइपुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्। बालबालिका र वृद्धवृद्धालाई लानुहोस्।",
       "attempts": 1
     },
     {
@@ -69,8 +69,8 @@
         66,
         110
       ],
-      "text_en": "FLOOD WARNING for Shanti Bazar. Flood may arrive in 66 to 110 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
-      "text_ne": "शान्ति बजारमा बाढीको चेतावनी। बाढी 66 देखि 110 मिनेटमा आउन सक्छ। अहिले नै निस्कनुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी हेर्न नबस्नुहोस्।",
+      "text_en": "FLOOD WARNING, Shanti Bazar: Flood may arrive in 66 to 110 minutes. Leave now. Move to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, शान्ति बजार: बाढी ६६ देखि ११० मिनेटमा आउन सक्छ। अहिले नै हिँड्नुहोस्। नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी देख्न नपर्खनुहोस्।",
       "attempts": 1
     },
     {
@@ -80,8 +80,8 @@
         71,
         119
       ],
-      "text_en": "FLOOD WARNING for Betrawati. Flood may arrive in 71 to 119 minutes. Move to high ground away from the river now. Do not wait to see the water.",
-      "text_ne": "बेत्रावतीमा बाढीको चेतावनी। बाढी ७१ देखि ११९ मिनेटमा आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।",
+      "text_en": "FLOOD ALERT, Betrawati: Flood may reach you in 71 to 119 minutes. Move now to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बाढीको चेतावनी, बेत्रावती: बाढी ७१ देखि ११९ मिनेटमा पुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आउँछ कि भनेर नपर्खनुहोस्।",
       "attempts": 1
     },
     {
@@ -91,8 +91,8 @@
         84,
         140
       ],
-      "text_en": "FLOOD WARNING for Bidur: flood may arrive in 84 to 140 minutes. Move to high ground away from the river now. Do not wait to see the water.",
-      "text_ne": "बिदुरमा बाढीको चेतावनी: बाढी ८४ देखि १४० मिनेटमा आउन सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नबस्नुहोस्।",
+      "text_en": "Flood alert for Bidur. Flood water may reach Bidur in 84 to 140 minutes. Move now to high ground away from the river. Do not wait to see the water.",
+      "text_ne": "बिदुरमा बाढीको चेतावनी। बाढी बिदुरमा 84 देखि 140 मिनेटभित्र पुग्न सक्छ। अहिले नै नदीबाट टाढा अग्लो ठाउँमा जानुहोस्। पानी आएको हेर्न नपर्खनुहोस्।",
       "attempts": 1
     }
   ]
