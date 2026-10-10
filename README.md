@@ -2,25 +2,28 @@
 
 Cross-border flood warnings from the first upstream signal.
 
-> **Status: work in progress.** All data in this repository is currently placeholder data
-> (`"placeholder": true` in `data/scenario.json`). River geometry, village locations and wave speeds
-> will be replaced with calibrated values before submission.
+> **This is a replay of a past event, not an operational warning system.** The scenario data in
+> `data/scenario.json` is built from the USGS catalogue, OpenStreetMap and published reports (see
+> [Sources](#sources)), and every number can be rebuilt with the scripts in `pipeline/`.
 
 Built for **ForgeHacks 2026** (AI + Climate track) during the hackathon period, October 3–10, 2026.
 
 ## The problem
 
-On August 26, 2026, a glacier or ice-rock collapse inside Tibet sent a debris flow down the
-Lhende Khola and Trishuli valleys into Nepal's Rasuwa district. Global seismic networks recorded
-the collapse at 08:37 local time, but the flood started on one side of a border and hit communities
-on the other, and no automated alert reached them.
+On August 26, 2026, a glacier or ice-rock collapse on the Tibetan side of the border sent a debris
+flow down the Lende Khola, Bhote Koshi and Trishuli valleys into Nepal's Rasuwa district. The USGS
+recorded the collapse as a magnitude 5.2 seismic event at 08:37 local time. The flood entered Nepal
+between about 09:00 and 09:15, and Nepali authorities first received word of it around 09:00. The
+flood started on one side of a border and hit communities on the other, and no system is reported
+to have turned the upstream seismic signal into alerts for the villages downstream.
 
 ## What this project does
 
 Upstream Alert is a prototype of an upstream-triggered early warning system, demonstrated by
 replaying the August 26 event:
 
-1. **Trigger**: detects a collapse-like seismic event near glaciers or headwater rivers.
+1. **Trigger**: detects a collapse-like seismic event near glaciers or headwater rivers
+   (magnitude 4 or more within 30 km of the upstream river).
 2. **Routing**: estimates when the flood reaches each downstream village, as a time window
    calibrated against reported arrival times.
 3. **Alerts**: an LLM writes short alerts in English and Nepali. All numbers come from the routing
@@ -28,6 +31,87 @@ replaying the August 26 event:
 
 It does **not** forecast whether a flood will happen. It turns an upstream signal into
 village-level alerts within minutes.
+
+## How it works
+
+```mermaid
+flowchart LR
+  usgs["USGS catalogue"] --> trig["Trigger<br/>pipeline/trigger.py"]
+  trig -->|fires| scen["Scenario builder<br/>pipeline/build_scenario.py"]
+  osm["OpenStreetMap<br/>rivers and villages"] --> scen
+  news["Reported border arrival<br/>09:00 to 09:15"] --> scen
+  scen --> sj[("data/scenario.json")]
+  sj --> gen["Alert generation, LLM<br/>ai/"]
+  gen --> val{"Validator:<br/>numbers match?"}
+  val -->|no, regenerate| gen
+  val -->|yes| aj[("data/alerts.json")]
+  sj --> web["Map replay<br/>web/"]
+  aj --> web
+```
+
+- **Flood path**: the shortest path along the OpenStreetMap rivers named Lende Khola, Bhote Koshi and
+  Trishuli, from the upstream signal down to Bidur (80.3 km). The USGS location is not on a mapped
+  river, so the path starts with a 10.3 km straight-line leg standing in for an unmapped tributary.
+- **Villages**: seven places named in reports as hit, plus Haku Besi, which lies on the flood path
+  between Syabru Bensi and Mailung, snapped to the flood path. All are within 1 km of it.
+- **Arrival windows**: distance along the flood path divided by a constant speed band of
+  33.3–55.2 km/h, calibrated so the flood reaches Rasuwa Gadhi between 09:00 and 09:15.
+
+## Results
+
+### Arrival windows
+
+Minutes after the 08:37 upstream signal. The right-hand column is the sensitivity check: if the flood
+is assumed to start at the Lende Khola rather than at the upstream signal, the speed band drops to
+17.1–28.4 km/h and downstream windows are up to 1.7 times later. This is the largest uncertainty in
+the model.
+
+| Village | Distance on flood path (km) | Arrival window (min) | Without the 10 km leg (min) |
+|---|---|---|---|
+| Rasuwa Gadhi | 21.0 | 23–38 | 23–38 |
+| Timure | 24.6 | 27–44 | 30–50 |
+| Syabru Bensi | 35.8 | 39–65 | 54–90 |
+| Haku Besi | 44.2 | 48–80 | 72–119 |
+| Mailung | 53.6 | 58–97 | 91–152 |
+| Shanti Bazar | 61.4 | 67–111 | 108–179 |
+| Betrawati | 66.7 | 72–120 | 119–198 |
+| Bidur | 78.3 | 85–141 | 144–239 |
+
+### Trigger evaluation
+
+`python pipeline/trigger.py` runs the trigger rule over every USGS event of magnitude 4 or more near
+the upstream river from 2016 to 2026 (22 events). The rule does not use the USGS "landslide" label,
+because USGS assigns it only after review: in real time the 26 August signal first appeared as an
+earthquake.
+
+| Radius from the Lende Khola | Alarms | Hits | False alarms |
+|---|---|---|---|
+| 10 km | 1 | 1 | 0 (misses the main 08:37 signal, 10.3 km away) |
+| 20 km | 2 | 2 | 0 |
+| **30 km (chosen)** | **2** | **2** | **0** |
+| 50 km | 9 | 2 | 7 |
+
+Both hits are 26 August events: the main signal and a magnitude 4.2 follow-up at 11:45. In 2015, the
+aftershocks of the Gorkha earthquake would have set off 4 alarms. Caveats: there is only one real
+collapse to test against, the radius was chosen knowing where it happened, and this measures false
+alarms, not missed collapses.
+
+### Alert evaluation
+
+TODO (Yunhong): number of runs, share of alerts whose numbers match the scenario, and share that
+pass the validator on the first try.
+
+## Limitations
+
+- **One past event.** This replays a single flood; it is not a validated forecast.
+- **One calibration point.** The border arrival time is used to fit the speed, so it cannot also
+  check it. No downstream arrival times were found: reports say the Syabru Bensi and Betrawati river
+  gauges stopped transmitting.
+- **Constant speed.** A real flood wave changes speed and spreads out as it travels downstream.
+- **Approximate source.** USGS locations for landslide signals are approximate, and the 10.3 km leg
+  to the river is a straight line.
+- **Reviewed catalogue.** The trigger is evaluated on the reviewed USGS catalogue. Real-time
+  magnitudes and locations differ and arrive with a delay.
 
 ## Repository layout
 
@@ -47,17 +131,39 @@ python -m http.server 8765
 
 Then open http://localhost:8765. Opening the HTML file directly (`file://`) blocks the base map tiles.
 
-Validate the data contract:
+Rebuild the scenario, validate the data contract and run the trigger evaluation (Python 3, no
+third-party packages):
 
 ```
+python pipeline/build_scenario.py
 python data/validate_scenario.py
+python pipeline/trigger.py
 ```
 
 ## Team
 
 - Yunhong Huang: AI layer, frontend, integration
-- TODO: teammate name and role
+- Chenxi Liu: data pipeline, GIS, calibration, trigger evaluation
 
 ## Sources
 
-TODO: list every news report and dataset used, with links.
+Data:
+
+- USGS events [us7000tbwb](https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb) (M5.2, 08:37)
+  and [us7000tc90](https://earthquake.usgs.gov/earthquakes/eventpage/us7000tc90) (M4.2, 11:45), and the
+  [USGS FDSN event API](https://earthquake.usgs.gov/fdsnws/event/1/) for the trigger evaluation.
+- Rivers and villages: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors,
+  available under the Open Database License (ODbL), via the [Overpass API](https://overpass-api.de/).
+
+Reports:
+
+- Borderlens, [Massive flash flood from Tibet devastates Nepal's Rasuwa district](https://www.borderlens.com/2026/08/26/massive-flash-flood-from-tibet-devastates-nepals-rasuwa-district-nepals-deepening-climate-challenge/),
+  2026-08-26: flood entered Nepal around 09:00; cross-border early warning gap.
+- Nepal Red Cross Society, [Rasuwa Flood Situation Update (26 August 2026)](https://nrcs.org/resources/news-and-events/rasuwa-flood-situation-update-26-august-2026/):
+  surge entered the Bhote Koshi at about 09:15.
+- NovaNews (AFP), [Experts: Glacier collapse may have caused Nepal-Tibet flooding](https://novanews.co.za/experts-glacier-collapse-may-have-caused-nepal-tibet-flooding/),
+  2026-08-27: the 08:37 seismic signal; authorities received word around 09:00.
+- Crossroads Foundation, [2026 Nepalese Flood](https://www.crossroads.org.hk/2026-nepalese-flood/):
+  collapse near Langtang Lirung.
+- NESRA, [FloodWatch: Rasuwa 2026](https://nesraspace.org/floodwatch/rasuwa-2026/): Syabru Bensi and
+  Betrawati gauges stopped transmitting.

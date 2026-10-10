@@ -36,7 +36,7 @@ OUT = os.path.join(ROOT, "data", "scenario.json")
 EVENT = {"id": "us7000tbwb", "lat": 28.271, "lon": 85.515, "mag": 5.2, "time": "2026-08-26T08:37:10+05:45"}
 PATH_END = (27.88, 85.14)  # just downstream of Bidur (Trishuli Bazaar)
 NAME_RE = re.compile(r"Lende|东林|Bhote Koshi|भोटे कोशी|Trishuli", re.I)
-# Villages named in news reports as hit, by their OSM names.
+# Villages by their OSM names: places named in reports as hit, plus Haku Besi (on the flood path).
 VILLAGES = ["Rasuwa Gadhi", "Timure", "Syabru Bensi", "Haku Besi", "Mailung",
             "Shanti Bazar", "Betrawati", "Bidur"]
 MAX_OFF_PATH_KM = 1.0
