@@ -134,7 +134,11 @@ now asks for the polite command form.
   USGS feed, the first version of the event appeared at 09:18, 41 minutes after the signal, as a
   magnitude 4.4 earthquake: the USGS 20-minute target for events outside the US applies only from
   magnitude 5. The trigger rule still fires on that first version (15.5 km from the Lende Khola), but
-  only after the flood had crossed into Nepal. A delay of minutes would need direct processing of
+  only after the flood had crossed into Nepal. Other catalogues were faster: GEOFON (GFZ Potsdam)
+  created its record of the event at 08:44, about 7 minutes after the signal, which would still have
+  left Rasuwa Gadhi roughly 15 to 30 minutes. That is when GEOFON's system created the event, not
+  necessarily when it appeared on its public pages, and its first automatic magnitude was not kept
+  (final mb 4.5, Mw 5.7). Getting close to the replay's 1 minute would need direct processing of
   seismometer data.
 - **Reviewed catalogue.** The trigger is evaluated on the reviewed USGS catalogue. Real-time
   magnitudes and locations differ: the first version was 31 km further north and listed at
@@ -197,6 +201,9 @@ Data:
   and [us7000tc90](https://earthquake.usgs.gov/earthquakes/eventpage/us7000tc90) (M4.2, 11:45), and the
   [USGS FDSN event API](https://earthquake.usgs.gov/fdsnws/event/1/) for the trigger evaluation and the
   publication time of the first version of the event.
+- GEOFON (GFZ Potsdam), event [gfz2026qrfy](https://geofon.gfz.de/eqinfo/event.php?id=gfz2026qrfy):
+  record created 02:58:59 UTC (08:44 Nepal time), from the event's
+  [QuakeML](https://geofon.gfz.de/fdsnws/event/1/query?eventid=gfz2026qrfy&format=xml) `creationInfo`.
 - USGS, [National Earthquake Information Center](https://www.usgs.gov/programs/earthquake-hazards/national-earthquake-information-center-neic):
   20-minute release target for events of magnitude 5 or more outside the US.
 - Rivers and villages: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors,
