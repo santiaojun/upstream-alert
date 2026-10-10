@@ -2,6 +2,8 @@
 
 Cross-border flood warnings from the first upstream signal.
 
+**Live demo:** https://santiaojun.github.io/upstream-alert/web/
+
 > **This is a replay of a past event, not an operational warning system.** The scenario data in
 > `data/scenario.json` is built from the USGS catalogue, OpenStreetMap and published reports (see
 > [Sources](#sources)), and every number can be rebuilt with the scripts in `pipeline/`.
@@ -220,4 +222,3 @@ Reports:
   the [BBC](https://www.bbc.com/news/live/cwrk34rzx3z2t).
 - Eos, The Landslide Blog, [Rasuwagadhi](https://eos.org/thelandslideblog/rasuwagadhi-1), 2025-07-09: the
   8 July 2025 flood in the same valley.
-**Live demo:** https://santiaojun.github.io/upstream-alert/web/
