@@ -101,8 +101,23 @@ alarms, not missed collapses.
 
 ### Alert evaluation
 
-TODO (Yunhong): number of runs, share of alerts whose numbers match the scenario, and share that
-pass the validator on the first try.
+Alerts state the time left when the alert is sent, 1 minute after the signal, so each window is 1 minute shorter than in the arrival table above.
+
+- **Model:** `claude-sonnet-5-5` (Anthropic), called through the Claude Code CLI (`claude -p`).
+- **Evaluation:** 20 rounds × 8 villages = 160 first drafts, 0 failed calls,
+  run with `python -X utf8 ai/evaluate_alerts.py 20`.
+
+| Check | First drafts that pass |
+|---|---|
+| Both lead times correct, no other numbers (English and Nepali) | 160/160 (100%) |
+| Village named in English and Nepali | 160/160 (100%) |
+| All checks (passes the validator on the first try) | 160/160 (100%) |
+
+**What this does and does not show.** The validator checks facts that can be checked
+mechanically: the numbers, the village names and the output format. A 100% first-try pass rate
+means the retry path was never needed in these runs; the validator still guards every alert
+before it is shown. It does **not** check whether the Nepali text is fluent or correct.
+No native Nepali speaker has reviewed the alerts.
 
 ## Limitations
 
@@ -164,6 +179,8 @@ python ai/generate_alerts.py
 python ai/validate_alerts.py
 python ai/evaluate_alerts.py 5
 ```
+
+On Windows, add `-X utf8` (for example `python -X utf8 ai/generate_alerts.py`); the alerts contain Devanagari text.
 
 ## Team
 

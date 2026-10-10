@@ -6,97 +6,160 @@
 <title>Upstream Alert: Aug 26 replay</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500&display=swap" rel="stylesheet">
 <style>
+
   :root {
-    --silt: #EEF0EC;      /* background: river silt */
-    --ink: #1F2A33;       /* body text */
-    --muted: #5E6B74;
-    --glacier: #4D7C99;   /* river not yet reached */
-    --debris: #6E3B1F;    /* reached: debris flow */
-    --amber: #D9A43A;     /* uncertainty band */
-    --line: #C9CFC9;
+    --glass: rgba(18, 21, 28, .72);
+    --glass-2: rgba(255, 255, 255, .06);
+    --ink: #F1F4F8; --muted: #9AA4B2; --line: rgba(255,255,255,.10);
+    --river: #6FD3FF; --idle: #9AA4B2; --warning: #FFD54F; --possible: #FF8A3D; --reached: #FF3D57;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
-  body {
-    font-family: "Atkinson Hyperlegible", "Noto Sans Devanagari", system-ui, sans-serif;
-    color: var(--ink); background: var(--silt);
-    display: grid; grid-template-columns: 1fr 380px; height: 100vh;
-  }
-  #map { height: 100%; background: #dfe3df; }
-  aside { overflow-y: auto; padding: 20px 22px; border-left: 1px solid var(--line); background: var(--silt); }
-  h1 { font-size: 1.05rem; margin: 0 0 4px; }
-  .note { font-size: .82rem; color: var(--muted); margin: 0 0 18px; line-height: 1.45; }
-  .clock { font-size: 3.4rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
-  .clock-sub { font-size: .9rem; color: var(--muted); margin: 6px 0 16px; min-height: 1.3em; }
-  .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
-  button, select {
-    font: inherit; font-size: .9rem; padding: 7px 12px; border: 1px solid var(--ink);
-    background: white; color: var(--ink); border-radius: 4px; cursor: pointer;
-  }
-  button.primary { background: var(--ink); color: white; }
-  button:focus-visible, select:focus-visible, input:focus-visible, li:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
-  input[type=range] { width: 100%; margin: 6px 0 18px; accent-color: var(--debris); }
-  .legend { display: flex; gap: 14px; font-size: .8rem; color: var(--muted); margin-bottom: 14px; flex-wrap: wrap; }
-  .legend span::before { content: ""; display: inline-block; width: 18px; height: 5px; margin-right: 6px; vertical-align: middle; background: var(--c); }
-  ul { list-style: none; padding: 0; margin: 0; }
-  li { border-top: 1px solid var(--line); padding: 12px 0; cursor: pointer; }
-  li .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-  li .name { font-weight: 700; }
-  li .status { font-size: .85rem; font-variant-numeric: tabular-nums; text-align: right; }
-  li .alert { font-size: .85rem; margin-top: 6px; color: var(--muted); line-height: 1.45; }
-  li[data-state=reached] .status { color: var(--debris); font-weight: 700; }
-  li[data-state=possible] .status { color: #8a6312; font-weight: 700; }
-  li .name-ne { font-weight: 400; color: var(--muted); margin-left: 6px; }
-  li .alert .sent { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
-  li .alert p { margin: 2px 0; color: var(--ink); }
-  .feed { font-size: .85rem; margin: -8px 0 16px; padding: 6px 8px; border-left: 3px solid var(--line); color: var(--muted); }
-  .feed[data-on] { border-left-color: var(--amber); color: var(--ink); }
+  body { font-family: "Inter", "Noto Sans Devanagari", system-ui, sans-serif; color: var(--ink); background: #0E1116; overflow: hidden; }
+  #map { position: fixed; inset: 0; background: #0E1116; }
+  .basemap { filter: grayscale(.85) brightness(.5) contrast(1.15); }
+  .labels { opacity: .55; }
+  .glass { background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line); border-radius: 14px; }
+
+  .brand { position: fixed; top: 16px; left: 60px; z-index: 1000; padding: 10px 16px; display: flex; align-items: baseline; gap: 12px; }
+  .brand h1 { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; }
+  .brand span { font-size: .78rem; color: var(--muted); }
+  .feed { position: fixed; top: 74px; left: 60px; z-index: 1000; padding: 8px 14px; font-size: .8rem; color: var(--muted); max-width: min(520px, calc(100vw - 500px)); }
+  .feed[data-on] { color: var(--ink); border-color: rgba(255,138,61,.5); }
   .feed:empty { display: none; }
-  .pulse { width: 18px; height: 18px; border-radius: 50%; background: var(--debris); border: 3px solid white; box-shadow: 0 0 0 0 rgba(110,59,31,.6); }
+
+  aside { position: fixed; top: 16px; right: 16px; bottom: 112px; width: 380px; z-index: 1000; display: flex; flex-direction: column; overflow: hidden; }
+  .aside-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--line); }
+  .label { font-size: .7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 8px; }
+  .counts { display: flex; gap: 14px; font-size: .8rem; color: var(--muted); }
+  .counts b { font-size: 1.25rem; color: var(--c); font-variant-numeric: tabular-nums; margin-right: 4px; }
+  ul { list-style: none; margin: 0; padding: 8px; overflow-y: auto; flex: 1; }
+  ul::-webkit-scrollbar { width: 6px; } ul::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+  li { --s: var(--idle); padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background .2s; position: relative; }
+  li + li { margin-top: 2px; }
+  li:hover { background: var(--glass-2); }
+  li[data-state=warning] { --s: var(--warning); }
+  li[data-state=possible] { --s: var(--possible); }
+  li[data-state=reached] { --s: var(--reached); background: rgba(255,61,87,.10); }
+  li .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  li .name { font-weight: 600; font-size: .92rem; display: flex; align-items: center; gap: 8px; }
+  li .name::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--s); box-shadow: 0 0 10px var(--s); flex: none; }
+  li .name-ne { font-weight: 400; color: var(--muted); }
+  li .status { font-size: .85rem; font-weight: 700; color: var(--s); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  li .alert { font-size: .8rem; line-height: 1.5; color: #D5DBE3; }
+  li .alert:not(:empty) { margin-top: 8px; padding-left: 16px; }
+  li .alert .sent { display: flex; align-items: center; gap: 4px; font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: #7CE3A1; margin-bottom: 3px; }
+  li .alert .sent svg { width: 13px; height: 13px; fill: currentColor; }
+  li .alert p { margin: 2px 0; } li .alert p[lang=ne] { color: var(--muted); }
+  code { font-size: .75rem; color: var(--river); }
+  .note { font-size: .7rem; color: var(--muted); line-height: 1.5; margin: 0; padding: 10px 16px 14px; border-top: 1px solid var(--line); }
+
+  /* Windy-style bottom timeline */
+  .timeline { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 1000; height: 84px; padding: 0 20px; display: flex; align-items: center; gap: 24px; }
+  /* Time readout is its own unit; a divider separates it from the player (button + track) */
+  .time-block { padding-right: 24px; margin: 14px 0; border-right: 1px solid var(--line); align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+  .player { flex: 1; min-width: 0; display: flex; align-items: center; gap: 16px; }
+  .player .legend { margin-top: 8px; }
+  #playBtn { width: 48px; height: 48px; flex: none; border-radius: 50%; border: none; background: var(--ink); color: #0E1116; font: 700 .75rem "Inter", sans-serif; cursor: pointer; }
+  #playBtn:hover { background: #fff; }
+  .time-block { flex: none; width: 290px; }
+  .clock { font-size: 2rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .clock-sub { font-size: .72rem; color: var(--muted); margin-top: 4px; line-height: 1.3; }
+  .track { flex: 1; min-width: 0; }
+  input[type=range] { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 22px; margin: 0; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 10px; border-radius: 5px; background: #33363D; }
+  input[type=range]::-moz-range-track { height: 10px; border-radius: 5px; background: #33363D; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; margin-top: -6px; border-radius: 50%; background: #fff; border: none; box-shadow: 0 0 0 6px rgba(80,140,170,.55); }
+  input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: none; box-shadow: 0 0 0 6px rgba(80,140,170,.55); }
+  .legend { display: flex; gap: 14px; font-size: .7rem; color: var(--muted); margin-top: 6px; flex-wrap: wrap; }
+  .legend span::before { content: ""; display: inline-block; width: 16px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: var(--c); box-shadow: 0 0 6px var(--c); }
+  .legend span.dash::before { background: repeating-linear-gradient(90deg, var(--river) 0 4px, transparent 4px 7px); box-shadow: none; }
+  .tl-right { display: flex; gap: 8px; align-items: center; flex: none; }
+  #resetBtn, select { height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid var(--line); background: var(--glass-2); color: var(--ink); font: 500 .8rem "Inter", sans-serif; cursor: pointer; }
+  select option { color: #000; }
+  button:focus-visible, select:focus-visible, input:focus-visible, li:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
+
+  .ln-river { filter: drop-shadow(0 0 3px rgba(111,211,255,.8)); }
+  .ln-possible { filter: drop-shadow(0 0 6px var(--possible)); }
+  .ln-reached { filter: drop-shadow(0 0 8px var(--reached)); }
+  .leaflet-tooltip.vlabel { background: rgba(14,17,22,.8); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; box-shadow: none; font: 600 .76rem "Inter", sans-serif; padding: 2px 7px; }
+  .leaflet-tooltip.vlabel::before { display: none; }
+  .leaflet-top.leaflet-left { top: 126px; }
+  .leaflet-bottom.leaflet-left { bottom: 100px; }
+  .leaflet-control-layers { background: var(--glass) !important; backdrop-filter: blur(14px); color: var(--ink); border: 1px solid var(--line) !important; border-radius: 12px !important; box-shadow: none !important; font: 500 .8rem "Inter", sans-serif; padding: 8px 12px 8px 8px !important; }
+  .leaflet-control-layers-separator { border-top-color: var(--line) !important; }
+  .leaflet-control-layers label { margin: 2px 0; cursor: pointer; }
+  .leaflet-control-layers input { accent-color: var(--river); margin-right: 6px; }
+  .terrain { filter: saturate(.85); }
+  .leaflet-bar { border: 1px solid var(--line) !important; border-radius: 10px !important; overflow: hidden; }
+  .leaflet-bar a { background: var(--glass); color: var(--ink); border-color: var(--line); }
+  .leaflet-bottom.leaflet-right { bottom: 100px; right: 410px; }
+  .leaflet-control-attribution { background: rgba(14,17,22,.7) !important; color: var(--muted); }
+  .leaflet-control-attribution a { color: var(--river); }
+  .pulse { width: 18px; height: 18px; border-radius: 50%; background: var(--reached); border: 3px solid #fff; box-shadow: 0 0 0 0 rgba(255,61,87,.7); }
   .pulse.on { animation: ping 1.4s ease-out infinite; }
-  @keyframes ping { to { box-shadow: 0 0 0 22px rgba(110,59,31,0); } }
+  @keyframes ping { to { box-shadow: 0 0 0 26px rgba(255,61,87,0); } }
   @media (prefers-reduced-motion: reduce) { .pulse.on { animation: none; } }
-  @media (max-width: 760px) {
-    body { grid-template-columns: 1fr; grid-template-rows: 45vh auto; height: auto; }
-    aside { border-left: none; border-top: 1px solid var(--line); }
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    #map { position: relative; height: 55vh; }
+    .brand, .feed { position: absolute; }
+    .feed { top: 64px; width: calc(100% - 32px); }
+    .timeline { position: static; margin: 12px; height: auto; padding: 12px; flex-wrap: wrap; }
+    .time-block { width: auto; flex: 1; border-right: none; padding-right: 0; } .player { flex-basis: 100%; order: 3; }
+    aside { position: static; width: auto; margin: 0 12px 12px; max-height: none; }
+    .leaflet-bottom.leaflet-right { bottom: 0; right: 0; }
   }
+
 </style>
 </head>
 <body>
 <div id="map" aria-label="River replay map"></div>
-<aside>
-  <h1>Upstream Alert: replaying August 26</h1>
-  <p class="note">Replay of a past event, not an operational warning system. Flood path, villages and arrival
-    windows come from <code>data/scenario.json</code>; alerts come from <code>data/alerts.json</code>, written by an
-    LLM and checked against the scenario. The dashed line is a straight-line stand-in for an unmapped stream.</p>
+<div class="brand glass"><h1>Upstream Alert</h1><span>Aug 26 replay · not an operational system</span></div>
+<div class="feed glass" id="feed"></div>
 
-  <div class="clock" id="clock">08:32</div>
-  <div class="clock-sub" id="clockSub"></div>
-  <div class="feed" id="feed"></div>
-
-  <div class="controls">
-    <button class="primary" id="playBtn">Play</button>
-    <button id="resetBtn">Reset</button>
-    <label for="rate" class="note" style="margin:0">Speed</label>
-    <select id="rate">
-      <option value="1">1 min per second</option>
-      <option value="5" selected>5 min per second</option>
-      <option value="15">15 min per second</option>
-    </select>
+<aside class="glass">
+  <div class="aside-head">
+    <p class="label">Village alerts</p>
+    <div class="counts">
+      <span style="--c: var(--warning)"><b id="kWarn">0</b>alerted</span>
+      <span style="--c: var(--possible)"><b id="kPossible">0</b>possibly reached</span>
+      <span style="--c: var(--reached)"><b id="kReached">0</b>reached</span>
+    </div>
   </div>
-  <input type="range" id="scrub" aria-label="Replay time">
-
-  <div class="legend">
-    <span style="--c: var(--debris)">Reached (slow estimate)</span>
-    <span style="--c: var(--amber)">Possibly reached (fast estimate)</span>
-    <span style="--c: var(--glacier)">Not yet reached</span>
-  </div>
-
   <ul id="villages"></ul>
+  <p class="note">Arrival windows from <code>data/scenario.json</code>. Alerts from <code>data/alerts.json</code>, written by an LLM and checked against the scenario before display.</p>
 </aside>
 
+<div class="timeline glass">
+  <div class="time-block">
+    <div class="clock" id="clock">08:32</div>
+    <div class="clock-sub" id="clockSub"></div>
+  </div>
+  <div class="player">
+    <button id="playBtn" aria-label="Play or pause">Play</button>
+    <div class="track">
+      <input type="range" id="scrub" aria-label="Replay time">
+    <div class="legend">
+      <span style="--c: var(--reached)">Reached (slow est.)</span>
+      <span style="--c: var(--possible)">Possibly reached (fast est.)</span>
+      <span style="--c: var(--river)">Not yet reached</span>
+      <span class="dash">Unmapped stream (straight line)</span>
+    </div>
+    </div>
+  </div>
+  <div class="tl-right">
+    <button id="resetBtn">Reset</button>
+    <label for="rate" style="position:absolute;left:-9999px">Speed</label>
+    <select id="rate">
+      <option value="1">1 min/s</option>
+      <option value="5" selected>5 min/s</option>
+      <option value="15">15 min/s</option>
+    </select>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ============================================================
@@ -118,6 +181,9 @@ function showLoadError(msg) {
   document.getElementById("clockSub").textContent =
     `Could not load the scenario (${msg}). Serve the repo root (python -m http.server) and open /web/.`;
 }
+
+// Display colours only; keep in sync with the CSS variables
+const C = { river: "#6FD3FF", idle: "#9AA4B2", ring: "#0E1116", warning: "#FFD54F", possible: "#FF8A3D", reached: "#FF3D57" };
 
 async function main() {
   let SCENARIO, ALERTS;
@@ -169,27 +235,43 @@ async function main() {
   // ============================================================
   // 3. Map
   // ============================================================
-  const map = L.map("map", { zoomControl: true });
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 16, attribution: "&copy; OpenStreetMap contributors"
-  }).addTo(map);
+  const map = L.map("map", { zoomControl: false });
+  L.control.zoom({ position: "topleft" }).addTo(map);
+  // Base map switcher: street map (default), terrain, dark satellite; place labels as an optional overlay
+  const baseLayers = {
+    "Street map": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 17, attribution: "&copy; OpenStreetMap contributors" }),
+    "Terrain": L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 17, className: "terrain", attribution: "Basemap &copy; Esri and contributors" }),
+    "Satellite (dark)": L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 17, className: "basemap", attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics" }),
+  };
+  const labels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 17, className: "labels", attribution: "Labels &copy; Esri" });
+  baseLayers["Street map"].addTo(map);
+  L.control.layers(baseLayers, { "Place labels (for satellite)": labels }, { position: "bottomleft", collapsed: false }).addTo(map);
+  map.on("baselayerchange", e => {
+    if (e.name.startsWith("Satellite")) labels.addTo(map); else map.removeLayer(labels);
+  });
 
   const fullLine = sliceAlong(totalKm);
   // The first segment is a straight-line stand-in for the unmapped stream from the signal to the Lende Khola
-  L.polyline(fullLine.slice(0, 2), { color: "#4D7C99", weight: 3, opacity: .8, dashArray: "6 8" }).addTo(map);
-  L.polyline(fullLine.slice(1), { color: "#4D7C99", weight: 4, opacity: .8 }).addTo(map);
-  const possibleLine = L.polyline([], { color: "#D9A43A", weight: 7 }).addTo(map);
-  const reachedLine  = L.polyline([], { color: "#6E3B1F", weight: 7 }).addTo(map);
-  map.fitBounds(L.polyline(fullLine).getBounds(), { padding: [40, 40] });
+  L.polyline(fullLine, { color: "#0E1116", weight: 8, opacity: .55 }).addTo(map);
+  L.polyline(fullLine.slice(0, 2), { color: C.river, weight: 3, opacity: .9, dashArray: "6 8", className: "ln-river" }).addTo(map);
+  L.polyline(fullLine.slice(1), { color: C.river, weight: 4, opacity: .95, className: "ln-river" }).addTo(map);
+  const possibleLine = L.polyline([], { color: C.possible, weight: 7, opacity: .9, className: "ln-possible" }).addTo(map);
+  const reachedLine  = L.polyline([], { color: C.reached, weight: 7, opacity: .95, className: "ln-reached" }).addTo(map);
+  const wide = window.innerWidth > 900;
+  map.fitBounds(L.polyline(fullLine).getBounds(), wide ? { paddingTopLeft: [40, 80], paddingBottomRight: [420, 130] } : { padding: [30, 30] });
 
   const pulseIcon = L.divIcon({ className: "", html: '<div class="pulse" id="pulse"></div>', iconSize: [18, 18] });
   L.marker([SCENARIO.event.lat, SCENARIO.event.lon], { icon: pulseIcon })
     .bindTooltip(`${SCENARIO.event.label_en}, M${SCENARIO.event.mag}`).addTo(map);
 
   const villageMarkers = villages.map((v, i) =>
-    L.circleMarker([v.lat, v.lon], { radius: 8, color: "white", weight: 2, fillColor: "#4D7C99", fillOpacity: 1 })
+    L.circleMarker([v.lat, v.lon], { radius: 7, color: C.ring, weight: 2.5, fillColor: C.idle, fillOpacity: 1 })
       // Alternate label sides so neighbouring villages (Rasuwa Gadhi, Timure) don't overlap
-      .bindTooltip(v.name_en, { permanent: true, direction: i % 2 ? "left" : "right", offset: [i % 2 ? -8 : 8, 0] })
+      .bindTooltip(v.name_en, { permanent: true, direction: i % 2 ? "left" : "right", offset: [i % 2 ? -8 : 8, 0], className: "vlabel" })
       .addTo(map)
   );
 
@@ -206,7 +288,7 @@ async function main() {
   function alertHtml(v) {
     const a = alertById[v.id];
     if (!a) return `<p>Alert not generated yet: run <code>python ai/generate_alerts.py</code>.</p>`;
-    return `<span class="sent">Alert sent ${clockText(delay)}</span>
+    return `<span class="sent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>Validated alert · sent ${clockText(delay)}</span>
             <p>${esc(a.text_en)}</p><p lang="ne">${esc(a.text_ne)}</p>`;
   }
 
@@ -260,6 +342,7 @@ async function main() {
     reachedLine.setLatLngs(t >= 0 ? sliceAlong(slowKm) : []);
     possibleLine.setLatLngs(t >= 0 ? sliceAlong(fastKm) : []);
 
+    const counts = {};
     villages.forEach((v, i) => {
       let state, status;
       if (t < delay) { state = "idle"; status = t < 0 ? "Normal" : "Generating alert"; }
@@ -274,8 +357,13 @@ async function main() {
       const alertEl = v.el.querySelector(".alert");
       const html = t < delay ? "" : alertHtml(v);
       if (alertEl.dataset.html !== html) { alertEl.innerHTML = html; alertEl.dataset.html = html; }
-      villageMarkers[i].setStyle({ fillColor: state === "reached" ? "#6E3B1F" : state === "possible" ? "#D9A43A" : "#4D7C99" });
+      villageMarkers[i].setStyle({ fillColor: state === "reached" ? C.reached : state === "possible" ? C.possible : state === "warning" ? C.warning : C.idle });
+      counts[state] = (counts[state] || 0) + 1;
     });
+    // Summary counters (display only)
+    document.getElementById("kWarn").textContent = counts.warning || 0;
+    document.getElementById("kPossible").textContent = counts.possible || 0;
+    document.getElementById("kReached").textContent = counts.reached || 0;
   }
 
   function loop(ts) {
@@ -288,7 +376,9 @@ async function main() {
   }
   function setPlaying(p) {
     playing = p; last = null;
-    document.getElementById("playBtn").textContent = p ? "Pause" : "Play";
+    const pb = document.getElementById("playBtn");
+    pb.textContent = p ? "Pause" : "Play";
+    pb.dataset.playing = p;
     if (p) requestAnimationFrame(loop);
   }
   document.getElementById("playBtn").onclick = () => { if (t >= END) t = START; setPlaying(!playing); };
