@@ -35,7 +35,7 @@ village-level alerts within minutes.
 ## How it works
 
 ```mermaid
-flowchart LR
+flowchart TD
   usgs["USGS catalogue"] --> trig["Trigger<br/>pipeline/trigger.py"]
   trig -->|fires| scen["Scenario builder<br/>pipeline/build_scenario.py"]
   osm["OpenStreetMap<br/>rivers and villages"] --> scen
