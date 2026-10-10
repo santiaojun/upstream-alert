@@ -11,3 +11,9 @@ Build the scenario from the OpenStreetMap extracts in `osm/` (how to refresh the
 python pipeline/build_scenario.py
 python data/validate_scenario.py
 ```
+
+Evaluate the trigger rule against the committed USGS catalogue in `usgs/` (prints Markdown tables):
+
+```
+python pipeline/trigger.py
+```
