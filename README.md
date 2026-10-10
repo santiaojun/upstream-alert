@@ -101,8 +101,6 @@ alarms, not missed collapses.
 
 ### Alert evaluation
 
-### Alert evaluation
-
 `python -X utf8 ai/evaluate_alerts.py 20` asks the LLM (Claude Sonnet 5.5, `claude-sonnet-5-5`, via the
 Claude Code CLI) for 20 first drafts per village, 160 in total, and checks each one before any
 regeneration. Results are in `ai/eval_results.json`.
@@ -222,3 +220,4 @@ Reports:
   the [BBC](https://www.bbc.com/news/live/cwrk34rzx3z2t).
 - Eos, The Landslide Blog, [Rasuwagadhi](https://eos.org/thelandslideblog/rasuwagadhi-1), 2025-07-09: the
   8 July 2025 flood in the same valley.
+**Live demo:** https://santiaojun.github.io/upstream-alert/web/
