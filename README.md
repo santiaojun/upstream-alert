@@ -101,6 +101,7 @@ alarms, not missed collapses.
 
 ### Alert evaluation
 
+<<<<<<< HEAD
 Alerts state the time left when the alert is sent, 1 minute after the signal, so each window is 1 minute shorter than in the arrival table above.
 
 - **Model:** `claude-sonnet-5-5` (Anthropic), called through the Claude Code CLI (`claude -p`).
@@ -118,6 +119,22 @@ mechanically: the numbers, the village names and the output format. A 100% first
 means the retry path was never needed in these runs; the validator still guards every alert
 before it is shown. It does **not** check whether the Nepali text is fluent or correct.
 No native Nepali speaker has reviewed the alerts.
+=======
+`python ai/evaluate_alerts.py 5` asks the LLM (Claude Sonnet 5.5, `claude-sonnet-5-5`, via the Claude
+Code CLI) for 5 first drafts per village, 40 in total, and checks each one before any regeneration.
+Results are in `ai/eval_results.json`.
+
+| Check | First drafts that pass |
+|---|---|
+| Both lead times correct and no other numbers, in English and Nepali | 40/40 |
+| Village named in English and Nepali | 40/40 |
+| All validator checks on the first try | 40/40 |
+
+Zero failures in 40 drafts still allows a failure rate of up to about 7.5% (95% confidence), so the
+validator stays in the loop. It checks numbers and names, not wording: an earlier prompt produced
+Nepali instructions phrased as statements and one garbled sentence, all of which passed. The prompt
+now asks for the polite command form.
+>>>>>>> 389a769fa4834961df3c8c7be6011a2909ad2a83
 
 ## Limitations
 
