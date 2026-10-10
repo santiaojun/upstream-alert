@@ -137,12 +137,14 @@ pass the validator on the first try.
 
 ## Run locally
 
+From the repo root (the page reads `../data/scenario.json` and `../data/alerts.json`):
+
 ```
-cd web
 python -m http.server 8765
 ```
 
-Then open http://localhost:8765. Opening the HTML file directly (`file://`) blocks the base map tiles.
+Then open http://localhost:8765/web/. Opening the HTML file directly (`file://`) blocks the data files
+and the base map tiles.
 
 Rebuild the scenario, validate the data contract and run the trigger evaluation (Python 3, no
 third-party packages):

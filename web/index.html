@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Upstream Alert: Aug 26 replay prototype (mock data)</title>
+<title>Upstream Alert: Aug 26 replay</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
@@ -48,6 +48,12 @@
   li .alert { font-size: .85rem; margin-top: 6px; color: var(--muted); line-height: 1.45; }
   li[data-state=reached] .status { color: var(--debris); font-weight: 700; }
   li[data-state=possible] .status { color: #8a6312; font-weight: 700; }
+  li .name-ne { font-weight: 400; color: var(--muted); margin-left: 6px; }
+  li .alert .sent { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+  li .alert p { margin: 2px 0; color: var(--ink); }
+  .feed { font-size: .85rem; margin: -8px 0 16px; padding: 6px 8px; border-left: 3px solid var(--line); color: var(--muted); }
+  .feed[data-on] { border-left-color: var(--amber); color: var(--ink); }
+  .feed:empty { display: none; }
   .pulse { width: 18px; height: 18px; border-radius: 50%; background: var(--debris); border: 3px solid white; box-shadow: 0 0 0 0 rgba(110,59,31,.6); }
   .pulse.on { animation: ping 1.4s ease-out infinite; }
   @keyframes ping { to { box-shadow: 0 0 0 22px rgba(110,59,31,0); } }
@@ -62,10 +68,13 @@
 <div id="map" aria-label="River replay map"></div>
 <aside>
   <h1>Upstream Alert: replaying August 26</h1>
-  <p class="note">Prototype with mock data only. River coordinates, village locations and speeds are placeholders until the real GeoJSON from ArcGIS replaces them.</p>
+  <p class="note">Replay of a past event, not an operational warning system. Flood path, villages and arrival
+    windows come from <code>data/scenario.json</code>; alerts come from <code>data/alerts.json</code>, written by an
+    LLM and checked against the scenario. The dashed line is a straight-line stand-in for an unmapped stream.</p>
 
   <div class="clock" id="clock">08:32</div>
   <div class="clock-sub" id="clockSub"></div>
+  <div class="feed" id="feed"></div>
 
   <div class="controls">
     <button class="primary" id="playBtn">Play</button>
@@ -91,182 +100,205 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ============================================================
-// 1. Data (mock) - replace with the file exported by the data pipeline
+// 1. Data: data/scenario.json (pipeline) and data/alerts.json (AI layer).
+//    Serve the repo root and open /web/ so ../data/ is reachable.
 //    Coordinates follow GeoJSON order: [lon, lat], WGS84 (EPSG:4326)
 // ============================================================
-const SCENARIO = {
-  event: { time: "08:37", lon: 85.47, lat: 28.36, mag: 5.2, label: "Upstream collapse signal (placeholder location)" },
-  // Calibrated speed range (km/h), placeholder. Real values come from the 09:00 and 14:14 observations.
-  speed_kmh: { low: 10, high: 25 },
-  alert_delay_min: 1, // system delay from signal to alert, placeholder
-  river: {
-    type: "Feature",
-    geometry: { type: "LineString", coordinates: [
-      [85.47,28.36],[85.43,28.32],[85.39,28.28],[85.37,28.23],[85.35,28.19],[85.34,28.16],
-      [85.30,28.11],[85.25,28.06],[85.21,28.01],[85.18,27.97],[85.15,27.92],[85.13,27.87],[85.12,27.82]
-    ]}
-  },
-  // If dist_km is missing, the frontend estimates it from the nearest vertex; real data should use ArcGIS linear referencing
-  villages: [
-    { name: "Timure",     lon: 85.39, lat: 28.28 },
-    { name: "Syafrubesi", lon: 85.34, lat: 28.16 },
-    { name: "Betrawati",  lon: 85.18, lat: 27.97 },
-    { name: "Kalikhola (location unverified)", lon: 85.12, lat: 27.82 }
-  ]
-};
-
-// ============================================================
-// 2. Geometry helpers: distance along the line and slicing (replaces turf.js lineSliceAlong)
-// ============================================================
-function haversineKm([lon1, lat1], [lon2, lat2]) {
-  const R = 6371, toRad = d => d * Math.PI / 180;
-  const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
-  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
-  return 2 * R * Math.asin(Math.sqrt(a));
-}
-const coords = SCENARIO.river.geometry.coordinates;
-const cum = [0];
-for (let i = 1; i < coords.length; i++) cum.push(cum[i-1] + haversineKm(coords[i-1], coords[i]));
-const totalKm = cum[cum.length - 1];
-
-// Returns coordinates from the source to d km downstream (Leaflet uses [lat, lon])
-function sliceAlong(d) {
-  d = Math.max(0, Math.min(d, totalKm));
-  const out = [[coords[0][1], coords[0][0]]];
-  for (let i = 1; i < coords.length; i++) {
-    if (cum[i] <= d) { out.push([coords[i][1], coords[i][0]]); continue; }
-    const f = (d - cum[i-1]) / (cum[i] - cum[i-1]);
-    const lon = coords[i-1][0] + f * (coords[i][0] - coords[i-1][0]);
-    const lat = coords[i-1][1] + f * (coords[i][1] - coords[i-1][1]);
-    out.push([lat, lon]);
-    break;
+async function loadJson(path, required) {
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) {
+    if (required) throw new Error(`${path}: HTTP ${res.status}`);
+    return null;
   }
-  return out;
+  return res.json();
 }
 
-// Without dist_km, roughly estimate from the nearest vertex (prototype only)
-SCENARIO.villages.forEach(v => {
-  if (v.dist_km == null) {
-    let best = 0, bestD = Infinity;
-    coords.forEach((c, i) => { const dd = haversineKm(c, [v.lon, v.lat]); if (dd < bestD) { bestD = dd; best = i; } });
-    v.dist_km = cum[best];
+function showLoadError(msg) {
+  document.getElementById("clock").textContent = "--:--";
+  document.getElementById("clockSub").textContent =
+    `Could not load the scenario (${msg}). Serve the repo root (python -m http.server) and open /web/.`;
+}
+
+async function main() {
+  let SCENARIO, ALERTS;
+  try {
+    [SCENARIO, ALERTS] = await Promise.all([
+      loadJson("../data/scenario.json", true),
+      loadJson("../data/alerts.json", false).catch(() => null),
+    ]);
+  } catch (e) {
+    showLoadError(e.message);
+    return;
   }
-  // Arrival window (minutes after the event): computed in code, never by the LLM
-  v.eta_min = [v.dist_km / SCENARIO.speed_kmh.high * 60, v.dist_km / SCENARIO.speed_kmh.low * 60];
-});
+  const alertById = Object.fromEntries((ALERTS?.alerts ?? []).map(a => [a.village_id, a]));
 
-// ============================================================
-// 3. Map
-// ============================================================
-const map = L.map("map", { zoomControl: true });
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 16, attribution: "&copy; OpenStreetMap contributors"
-}).addTo(map);
+  // ============================================================
+  // 2. Geometry helpers: distance along the line and slicing (replaces turf.js lineSliceAlong)
+  // ============================================================
+  function haversineKm([lon1, lat1], [lon2, lat2]) {
+    const R = 6371, toRad = d => d * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(a));
+  }
+  const coords = SCENARIO.river.geometry.coordinates;
+  const cum = [0];
+  for (let i = 1; i < coords.length; i++) cum.push(cum[i-1] + haversineKm(coords[i-1], coords[i]));
+  const totalKm = cum[cum.length - 1];
 
-const fullLine = sliceAlong(totalKm);
-L.polyline(fullLine, { color: "#4D7C99", weight: 4, opacity: .8 }).addTo(map);
-const possibleLine = L.polyline([], { color: "#D9A43A", weight: 7 }).addTo(map);
-const reachedLine  = L.polyline([], { color: "#6E3B1F", weight: 7 }).addTo(map);
-map.fitBounds(L.polyline(fullLine).getBounds(), { padding: [40, 40] });
-
-const pulseIcon = L.divIcon({ className: "", html: '<div class="pulse" id="pulse"></div>', iconSize: [18, 18] });
-L.marker([SCENARIO.event.lat, SCENARIO.event.lon], { icon: pulseIcon })
-  .bindTooltip(`${SCENARIO.event.label}，M${SCENARIO.event.mag}`).addTo(map);
-
-const villageMarkers = SCENARIO.villages.map(v =>
-  L.circleMarker([v.lat, v.lon], { radius: 8, color: "white", weight: 2, fillColor: "#4D7C99", fillOpacity: 1 })
-    .bindTooltip(v.name, { permanent: true, direction: "right", offset: [8, 0] }).addTo(map)
-);
-
-// ============================================================
-// 4. Side panel
-// ============================================================
-const list = document.getElementById("villages");
-SCENARIO.villages.forEach((v, i) => {
-  const li = document.createElement("li");
-  li.tabIndex = 0;
-  li.innerHTML = `<div class="row"><span class="name">${v.name}</span><span class="status"></span></div>
-                  <div class="alert"></div>`;
-  const focus = () => map.flyTo([v.lat, v.lon], 12, { duration: .6 });
-  li.addEventListener("click", focus);
-  li.addEventListener("keydown", e => { if (e.key === "Enter") focus(); });
-  list.appendChild(li);
-  v.el = li;
-});
-
-// Placeholder alert text: the real version comes from the AI layer, with numbers checked by the validator
-function mockAlert(v, t) {
-  const lo = Math.max(0, Math.round(v.eta_min[0] - t)), hi = Math.round(v.eta_min[1] - t);
-  return `[EN] Flood wave from upstream. Expected in about ${lo}–${hi} min. Move to higher ground now.<br>[NE] (Nepali alert: generated by the AI layer)`;
-}
-
-// ============================================================
-// 5. Timeline and rendering
-// ============================================================
-const START = -5; // start 5 minutes before the event
-const END = Math.ceil(Math.max(...SCENARIO.villages.map(v => v.eta_min[1]))) + 10;
-const scrub = document.getElementById("scrub");
-scrub.min = START; scrub.max = END; scrub.step = 0.1;
-
-const [eh, em] = SCENARIO.event.time.split(":").map(Number);
-function clockText(t) {
-  const total = Math.floor(eh * 60 + em + t);
-  return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(((total % 60) + 60) % 60).padStart(2, "0")}`;
-}
-
-let t = START, playing = false, last = null;
-
-function render() {
-  scrub.value = t;
-  document.getElementById("clock").textContent = clockText(t);
-  const sub = document.getElementById("clockSub");
-  if (t < 0) sub.textContent = "Nepal time (UTC+5:45). No upstream signal yet.";
-  else if (t < SCENARIO.alert_delay_min) sub.textContent = `Signal detected ${Math.round(t)} min ago. Generating alerts.`;
-  else sub.textContent = `${Math.floor(t)} min after the signal. Alerts sent.`;
-
-  document.getElementById("pulse")?.classList.toggle("on", t >= 0);
-
-  const tt = Math.max(0, t);
-  const slowKm = SCENARIO.speed_kmh.low * tt / 60;
-  const fastKm = SCENARIO.speed_kmh.high * tt / 60;
-  reachedLine.setLatLngs(t >= 0 ? sliceAlong(slowKm) : []);
-  possibleLine.setLatLngs(t >= 0 ? sliceAlong(fastKm) : []);
-
-  SCENARIO.villages.forEach((v, i) => {
-    let state, status, alert = "";
-    if (t < SCENARIO.alert_delay_min) { state = "idle"; status = t < 0 ? "Normal" : "Generating alert"; }
-    else if (v.dist_km <= slowKm) { state = "reached"; status = "Reached"; }
-    else if (v.dist_km <= fastKm) { state = "possible"; status = "Possibly reached"; alert = mockAlert(v, t); }
-    else {
-      state = "warning";
-      status = `${Math.round(v.eta_min[0] - t)}–${Math.round(v.eta_min[1] - t)} min`;
-      alert = mockAlert(v, t);
+  // Returns coordinates from the source to d km downstream (Leaflet uses [lat, lon])
+  function sliceAlong(d) {
+    d = Math.max(0, Math.min(d, totalKm));
+    const out = [[coords[0][1], coords[0][0]]];
+    for (let i = 1; i < coords.length; i++) {
+      if (cum[i] <= d) { out.push([coords[i][1], coords[i][0]]); continue; }
+      const f = (d - cum[i-1]) / (cum[i] - cum[i-1]);
+      const lon = coords[i-1][0] + f * (coords[i][0] - coords[i-1][0]);
+      const lat = coords[i-1][1] + f * (coords[i][1] - coords[i-1][1]);
+      out.push([lat, lon]);
+      break;
     }
-    v.el.dataset.state = state;
-    v.el.querySelector(".status").textContent = status;
-    v.el.querySelector(".alert").innerHTML = alert;
-    villageMarkers[i].setStyle({ fillColor: state === "reached" ? "#6E3B1F" : state === "possible" ? "#D9A43A" : "#4D7C99" });
+    return out;
+  }
+
+  // Arrival windows (minutes after the upstream signal) come from the pipeline, never from the LLM
+  const villages = SCENARIO.villages;
+  const delay = SCENARIO.alert_delay_min;
+  const feed = SCENARIO.event.public_feed;
+
+  // ============================================================
+  // 3. Map
+  // ============================================================
+  const map = L.map("map", { zoomControl: true });
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 16, attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+
+  const fullLine = sliceAlong(totalKm);
+  // The first segment is a straight-line stand-in for the unmapped stream from the signal to the Lende Khola
+  L.polyline(fullLine.slice(0, 2), { color: "#4D7C99", weight: 3, opacity: .8, dashArray: "6 8" }).addTo(map);
+  L.polyline(fullLine.slice(1), { color: "#4D7C99", weight: 4, opacity: .8 }).addTo(map);
+  const possibleLine = L.polyline([], { color: "#D9A43A", weight: 7 }).addTo(map);
+  const reachedLine  = L.polyline([], { color: "#6E3B1F", weight: 7 }).addTo(map);
+  map.fitBounds(L.polyline(fullLine).getBounds(), { padding: [40, 40] });
+
+  const pulseIcon = L.divIcon({ className: "", html: '<div class="pulse" id="pulse"></div>', iconSize: [18, 18] });
+  L.marker([SCENARIO.event.lat, SCENARIO.event.lon], { icon: pulseIcon })
+    .bindTooltip(`${SCENARIO.event.label_en}, M${SCENARIO.event.mag}`).addTo(map);
+
+  const villageMarkers = villages.map((v, i) =>
+    L.circleMarker([v.lat, v.lon], { radius: 8, color: "white", weight: 2, fillColor: "#4D7C99", fillOpacity: 1 })
+      // Alternate label sides so neighbouring villages (Rasuwa Gadhi, Timure) don't overlap
+      .bindTooltip(v.name_en, { permanent: true, direction: i % 2 ? "left" : "right", offset: [i % 2 ? -8 : 8, 0] })
+      .addTo(map)
+  );
+
+  // ============================================================
+  // 4. Side panel
+  // ============================================================
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const [eh, em] = SCENARIO.event.time.match(/T(\d{2}):(\d{2})/).slice(1).map(Number);
+  function clockText(t) {
+    const total = Math.floor(eh * 60 + em + t);
+    return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(((total % 60) + 60) % 60).padStart(2, "0")}`;
+  }
+
+  function alertHtml(v) {
+    const a = alertById[v.id];
+    if (!a) return `<p>Alert not generated yet: run <code>python ai/generate_alerts.py</code>.</p>`;
+    return `<span class="sent">Alert sent ${clockText(delay)}</span>
+            <p>${esc(a.text_en)}</p><p lang="ne">${esc(a.text_ne)}</p>`;
+  }
+
+  const list = document.getElementById("villages");
+  villages.forEach(v => {
+    const li = document.createElement("li");
+    li.tabIndex = 0;
+    li.innerHTML = `<div class="row"><span class="name">${esc(v.name_en)}<span class="name-ne" lang="ne">${esc(v.name_ne ?? "")}</span></span>
+                    <span class="status"></span></div><div class="alert"></div>`;
+    const focus = () => map.flyTo([v.lat, v.lon], 12, { duration: .6 });
+    li.addEventListener("click", focus);
+    li.addEventListener("keydown", e => { if (e.key === "Enter") focus(); });
+    list.appendChild(li);
+    v.el = li;
   });
-}
 
-function loop(ts) {
-  if (!playing) return;
-  if (last != null) t += (ts - last) / 1000 * Number(document.getElementById("rate").value);
-  last = ts;
-  if (t >= END) { t = END; setPlaying(false); }
+  // ============================================================
+  // 5. Timeline and rendering
+  // ============================================================
+  const START = -5; // start 5 minutes before the event
+  const END = Math.ceil(Math.max(...villages.map(v => v.eta_min[1]))) + 10;
+  const scrub = document.getElementById("scrub");
+  scrub.min = START; scrub.max = END; scrub.step = 0.1;
+
+  let t = START, playing = false, last = null;
+
+  function render() {
+    scrub.value = t;
+    document.getElementById("clock").textContent = clockText(t);
+    const sub = document.getElementById("clockSub");
+    if (t < 0) sub.textContent = "Nepal time (UTC+5:45). No upstream signal yet.";
+    else if (t < delay) sub.textContent = `Signal detected ${Math.round(t)} min ago. Generating alerts.`;
+    else sub.textContent = `${Math.floor(t)} min after the signal. Alerts sent at ${clockText(delay)}.`;
+
+    const feedEl = document.getElementById("feed");
+    if (!feed || t < 0) { feedEl.textContent = ""; feedEl.removeAttribute("data-on"); }
+    else if (t < feed.minutes_after_signal) {
+      feedEl.textContent = "Public USGS feed: event not published yet.";
+      feedEl.removeAttribute("data-on");
+    } else {
+      feedEl.textContent = `Public USGS feed: event published at ${clockText(feed.minutes_after_signal)} as an ` +
+        `M${feed.mag} ${feed.event_type}, ${Math.round(feed.minutes_after_signal)} min after the signal.`;
+      feedEl.setAttribute("data-on", "");
+    }
+
+    document.getElementById("pulse")?.classList.toggle("on", t >= 0);
+
+    const tt = Math.max(0, t);
+    const slowKm = SCENARIO.speed_kmh.low * tt / 60;
+    const fastKm = SCENARIO.speed_kmh.high * tt / 60;
+    reachedLine.setLatLngs(t >= 0 ? sliceAlong(slowKm) : []);
+    possibleLine.setLatLngs(t >= 0 ? sliceAlong(fastKm) : []);
+
+    villages.forEach((v, i) => {
+      let state, status;
+      if (t < delay) { state = "idle"; status = t < 0 ? "Normal" : "Generating alert"; }
+      else if (v.dist_km <= slowKm) { state = "reached"; status = "Reached"; }
+      else if (v.dist_km <= fastKm) { state = "possible"; status = "Possibly reached"; }
+      else {
+        state = "warning";
+        status = `${Math.max(0, Math.round(v.eta_min[0] - t))}–${Math.round(v.eta_min[1] - t)} min`;
+      }
+      v.el.dataset.state = state;
+      v.el.querySelector(".status").textContent = status;
+      const alertEl = v.el.querySelector(".alert");
+      const html = t < delay ? "" : alertHtml(v);
+      if (alertEl.dataset.html !== html) { alertEl.innerHTML = html; alertEl.dataset.html = html; }
+      villageMarkers[i].setStyle({ fillColor: state === "reached" ? "#6E3B1F" : state === "possible" ? "#D9A43A" : "#4D7C99" });
+    });
+  }
+
+  function loop(ts) {
+    if (!playing) return;
+    if (last != null) t += (ts - last) / 1000 * Number(document.getElementById("rate").value);
+    last = ts;
+    if (t >= END) { t = END; setPlaying(false); }
+    render();
+    requestAnimationFrame(loop);
+  }
+  function setPlaying(p) {
+    playing = p; last = null;
+    document.getElementById("playBtn").textContent = p ? "Pause" : "Play";
+    if (p) requestAnimationFrame(loop);
+  }
+  document.getElementById("playBtn").onclick = () => { if (t >= END) t = START; setPlaying(!playing); };
+  document.getElementById("resetBtn").onclick = () => { setPlaying(false); t = START; render(); };
+  scrub.oninput = () => { t = Number(scrub.value); render(); };
+
   render();
-  requestAnimationFrame(loop);
 }
-function setPlaying(p) {
-  playing = p; last = null;
-  document.getElementById("playBtn").textContent = p ? "Pause" : "Play";
-  if (p) requestAnimationFrame(loop);
-}
-document.getElementById("playBtn").onclick = () => { if (t >= END) t = START; setPlaying(!playing); };
-document.getElementById("resetBtn").onclick = () => { setPlaying(false); t = START; render(); };
-scrub.oninput = () => { t = Number(scrub.value); render(); };
 
-render();
+main();
 </script>
 </body>
 </html>
