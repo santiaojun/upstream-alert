@@ -34,6 +34,11 @@ OUT = os.path.join(ROOT, "data", "scenario.json")
 
 # USGS us7000tbwb: 02:52:10 UTC = 08:37:10 Nepal time (UTC+5:45).
 EVENT = {"id": "us7000tbwb", "lat": 28.271, "lon": 85.515, "mag": 5.2, "time": "2026-08-26T08:37:10+05:45"}
+# First version USGS published, from the event's superseded products: 03:33:31 UTC = 09:18:31 Nepal time.
+PUBLIC_FEED = {"first_published": "2026-08-26T09:18:31+05:45", "minutes_after_signal": 41.4,
+               "mag": 4.4, "mag_type": "mb", "event_type": "earthquake", "lat": 28.5495, "lon": 85.5378,
+               "note": "below the USGS M5 threshold for its 20-minute release target outside the US",
+               "source": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000tbwb&format=geojson&includesuperseded=true"}
 PATH_END = (27.88, 85.14)  # just downstream of Bidur (Trishuli Bazaar)
 NAME_RE = re.compile(r"Lende|东林|Bhote Koshi|भोटे कोशी|Trishuli", re.I)
 # Villages by their OSM names: places named in reports as hit, plus Haku Besi (on the flood path).
@@ -142,6 +147,7 @@ scenario = {
               "location_note": "USGS locations for landslide seismic sources are approximate. The signal is "
                                f"{leg_km:.1f} km from the nearest mapped Lende Khola point; the flood path bridges "
                                "this with a straight-line leg standing in for an unmapped tributary.",
+              "public_feed": PUBLIC_FEED,
               "source": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb"},
     "speed_kmh": {"low": low, "high": high,
                   "method": "constant speed; Rasuwa Gadhi distance / (09:15 or 09:00 entry - 08:37:10 upstream signal)"},

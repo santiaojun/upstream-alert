@@ -14,6 +14,17 @@
       "offset_km": 10.26
     },
     "location_note": "USGS locations for landslide seismic sources are approximate. The signal is 10.3 km from the nearest mapped Lende Khola point; the flood path bridges this with a straight-line leg standing in for an unmapped tributary.",
+    "public_feed": {
+      "first_published": "2026-08-26T09:18:31+05:45",
+      "minutes_after_signal": 41.4,
+      "mag": 4.4,
+      "mag_type": "mb",
+      "event_type": "earthquake",
+      "lat": 28.5495,
+      "lon": 85.5378,
+      "note": "below the USGS M5 threshold for its 20-minute release target outside the US",
+      "source": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000tbwb&format=geojson&includesuperseded=true"
+    },
     "source": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb"
   },
   "speed_kmh": {
