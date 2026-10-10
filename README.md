@@ -10,12 +10,14 @@ Built for **ForgeHacks 2026** (AI + Climate track) during the hackathon period, 
 
 ## The problem
 
-On August 26, 2026, a glacier or ice-rock collapse on the Tibetan side of the border sent a debris
-flow down the Lende Khola, Bhote Koshi and Trishuli valleys into Nepal's Rasuwa district. The USGS
-recorded the collapse as a magnitude 5.2 seismic event at 08:37 local time. The flood entered Nepal
-between about 09:00 and 09:15, and Nepali authorities first received word of it around 09:00. The
-flood started on one side of a border and hit communities on the other, and no system is reported
-to have turned the upstream seismic signal into alerts for the villages downstream.
+On August 26, 2026, a high-altitude ice-rock collapse just inside Nepal, at the head of a tributary
+of the Lende Khola, sent a debris flow down the Lende Khola through Tibet's Gyirong port and back
+into Nepal's Rasuwa district along the Bhote Koshi and Trishuli. The USGS recorded the collapse as a
+magnitude 5.2 seismic event at 08:37 local time. The flood re-entered Nepal between about 09:00 and
+09:15, and Nepali authorities first received word of it around 09:00. By 31 August, Nepal's disaster
+authority had recorded 939 bodies recovered and 3,925 people missing. The flood crossed the border
+twice, and no system is reported to have turned the upstream seismic signal into alerts for the
+villages downstream.
 
 ## What this project does
 
@@ -51,7 +53,8 @@ flowchart TD
 
 - **Flood path**: the shortest path along the OpenStreetMap rivers named Lende Khola, Bhote Koshi and
   Trishuli, from the upstream signal down to Bidur (80.3 km). The USGS location is not on a mapped
-  river, so the path starts with a 10.3 km straight-line leg standing in for an unmapped tributary.
+  river, so the path starts with a 10.3 km straight-line leg standing in for the unmapped tributary
+  where China's Ministry of Natural Resources places the collapse.
 - **Villages**: seven places named in reports as hit, plus Haku Besi, which lies on the flood path
   between Syabru Bensi and Mailung, snapped to the flood path. All are within 1 km of it.
 - **Arrival windows**: distance along the flood path divided by a constant speed band of
@@ -110,8 +113,18 @@ pass the validator on the first try.
 - **Constant speed.** A real flood wave changes speed and spreads out as it travels downstream.
 - **Approximate source.** USGS locations for landslide signals are approximate, and the 10.3 km leg
   to the river is a straight line.
+- **Alert delay.** The replay assumes the alert goes out 1 minute after the signal. Through the public
+  USGS feed, the first version of the event appeared at 09:18, 41 minutes after the signal, as a
+  magnitude 4.4 earthquake: the USGS 20-minute target for events outside the US applies only from
+  magnitude 5. The trigger rule still fires on that first version (15.5 km from the Lende Khola), but
+  only after the flood had crossed into Nepal. A delay of minutes would need direct processing of
+  seismometer data.
 - **Reviewed catalogue.** The trigger is evaluated on the reviewed USGS catalogue. Real-time
-  magnitudes and locations differ and arrive with a delay.
+  magnitudes and locations differ: the first version was 31 km further north and listed at
+  magnitude 4.4 instead of 5.2.
+- **Floods that don't shake the ground.** The trigger needs a catalogued seismic event. The
+  8 July 2025 flood in the same valley, which destroyed the Miteri Bridge at Rasuwagadhi, has no USGS
+  event, so the rule would have missed it.
 
 ## Repository layout
 
@@ -151,7 +164,10 @@ Data:
 
 - USGS events [us7000tbwb](https://earthquake.usgs.gov/earthquakes/eventpage/us7000tbwb) (M5.2, 08:37)
   and [us7000tc90](https://earthquake.usgs.gov/earthquakes/eventpage/us7000tc90) (M4.2, 11:45), and the
-  [USGS FDSN event API](https://earthquake.usgs.gov/fdsnws/event/1/) for the trigger evaluation.
+  [USGS FDSN event API](https://earthquake.usgs.gov/fdsnws/event/1/) for the trigger evaluation and the
+  publication time of the first version of the event.
+- USGS, [National Earthquake Information Center](https://www.usgs.gov/programs/earthquake-hazards/national-earthquake-information-center-neic):
+  20-minute release target for events of magnitude 5 or more outside the US.
 - Rivers and villages: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors,
   available under the Open Database License (ODbL), via the [Overpass API](https://overpass-api.de/).
 
@@ -167,3 +183,11 @@ Reports:
   collapse near Langtang Lirung.
 - NESRA, [FloodWatch: Rasuwa 2026](https://nesraspace.org/floodwatch/rasuwa-2026/): Syabru Bensi and
   Betrawati gauges stopped transmitting.
+- Science and Technology Daily (科技日报), [自然资源部：西藏吉隆泥石流由尼泊尔境内高山冰崩引发](https://www.stdaily.com/web/gdxw/2026-08/28/content_571025.html),
+  2026-08-28: China's Ministry of Natural Resources places the collapse inside Nepal, on a tributary of
+  the Lende Khola upstream of Gyirong port.
+- Spotlight Nepal, [Rasuwa Floods: 939 Bodies Recovered by Monday Evening, 3,925 People Missing](https://www.spotlightnepal.com/2026/08/31/rasuwa-floods-939-bodies-recovered-monday-evening-3925-people-missing/),
+  2026-08-31, citing Nepal's National Disaster Risk Reduction and Management Authority; also reported by
+  the [BBC](https://www.bbc.com/news/live/cwrk34rzx3z2t).
+- Eos, The Landslide Blog, [Rasuwagadhi](https://eos.org/thelandslideblog/rasuwagadhi-1), 2025-07-09: the
+  8 July 2025 flood in the same valley.
